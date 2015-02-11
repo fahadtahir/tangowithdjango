@@ -24,7 +24,7 @@
         {% if pages %}
             <ul>
                 {% for page in pages %}
-                <li><a href="/rango/page/{{ page.slug }}">{{ page.name }}</a></li>
+                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}
@@ -35,7 +35,6 @@
 		
         {% if user.is_authenticated %}
 		<a href="/rango/add_category/">Add a New Category</a>
-		<a href="/rango/add_page/">Add a New Page</a><br />
 		<a href="/rango/restricted/">Restricted Page</a><br />
 		<a href="/rango/logout/">Logout</a><br />
 		{% else %}
