@@ -34,27 +34,32 @@ def populate():
 
     add_page(cat=django_cat,
         title="How to Tango with Django",
-        url="http://www.tangowithdjango.com/")
+        url="http://www.tangowithdjango.com/",
+        views=5     )
 
     frame_cat = add_cat("Other Frameworks",32,16)
 
     add_page(cat=frame_cat,
         title="Bottle",
-        url="http://bottlepy.org/docs/dev/")
+        url="http://bottlepy.org/docs/dev/",
+        views=10     )
 
     add_page(cat=frame_cat,
         title="Flask",
-        url="http://flask.pocoo.org")
+        url="http://flask.pocoo.org",
+        views=25     )
 
     frame_cat = add_cat("Fahad Tahir",0,0)
 
     add_page(cat=frame_cat,
         title="My github page",
-        url="https://github.com/fahadtahir")
+        url="https://github.com/fahadtahir",
+        views=50     )
 
     add_page(cat=frame_cat,
         title="My python anywhere page",
-        url="https://www.pythonanywhere.com/user/fahadtahir/consoles/")
+        url="https://www.pythonanywhere.com/user/fahadtahir/consoles/",
+        views=100     )
 
     # Print out what we have added to the user.
     for c in Category.objects.all():
@@ -66,9 +71,7 @@ def add_page(cat, title, url, views=0):
     return p
 
 def add_cat(name,views,likes):
-    c = Category.objects.get_or_create(name=name)[0]
-    c.views=views
-    c.likes=likes
+    c = Category.objects.get_or_create(name=name,views=views,likes=likes)[0]
     return c
 
 # Start execution here!
