@@ -24,7 +24,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['fahadtahir.pythonanywhere.com']
 
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 

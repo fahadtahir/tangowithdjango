@@ -26,6 +26,8 @@ from rango.bing_search import run_query
 
 from django.shortcuts import redirect
 
+from rango.models import UserProfile
+
 def index(request):
 
     category_list = Category.objects.order_by('-likes')[:5]
@@ -251,7 +253,7 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect('/rango/')
+                return HttpResponseRedirect('/rango/add_profile/')
             else:
                 # An inactive account was used - no logging in!
                 return HttpResponse("Your Rango account is disabled.")
@@ -316,3 +318,49 @@ def track_url(request):
                 pass
 
     return redirect(url)
+	
+def register_profile(request):
+    if request.method == 'POST':
+        user_profile_form = UserProfileForm(request.POST)
+        if user_profile_form.is_valid():
+            if request.user.is_authenticated():
+                user_profile = user_profile_form.save(commit = False)
+                user = User.objects.get(id=request.user.id)
+                user_profile.user = user
+
+                if 'picture' in request.FILES:
+                    user_profile.picture = request.FILES['picture']
+                    user_profile.website = user_profile_form.cleaned_data['website']
+                    user_profile.save()
+                return redirect('/rango/profile')
+            else:
+                user_profile_form = UserProfileForm()
+
+
+            return render(request,'rango/profile_registration.html', {'profile_form': user_profile_form})
+@login_required
+def profile(request):
+    user = User.objects.get(username=request.user.username)
+    profile = UserProfile.objects.get(user_id=user.id)
+    context_dict = { 'user' : user, 'userprofile': profile}
+    return render(request,'rango/profile.html',context_dict)
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user_profile_form = UserProfileForm(request.POST)
+        if user_profile_form.is_valid():
+            if request.user.is_authenticated():
+                user_profile = UserProfile.objects.get(user_id=request.user.id)
+                if 'picture' in request.FILES:
+                    user_profile.picture = request.FILES['picture']
+                if 'website' in user_profile_form.cleaned_data:
+                    user_profile.website = user_profile_form.cleaned_data['website']
+
+                user_profile.save()
+
+        return redirect('/rango/profile')
+    else:
+        user_profile_form = UserProfileForm()
+
+    return render(request,'rango/edit_profile.html', {'profile_form': user_profile_form})
